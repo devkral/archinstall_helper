@@ -39,15 +39,22 @@ step_1()
 #reads file into internal variable
 read_in()
 {
-	if ! tmp_read_step="$(cat "$ai_step_file")"; then
-		cur_step_read=-1
+	if ! tmp_read_step="$(grep -o "^[0-9]*" "$ai_step_file")"; then
+		echo "Error: Fileinput error"
+		exit 1
 	fi
 	
-	if [[ !'' && *[0-9]* ]] ; then
-		cur_step_read=$tmp_read_step
-	else
-		cur_step_read=-1
+	if [ "$tmp_read_step" = "" ]; then
+		echo "Error: No number could be read from file ($ai_step_file)"
 	fi
+	
+	if [[ $tmp_read_step -lt 1 || $tmp_read_step -gt $LAST_STEP ]] ; then
+
+		echo "Error:  read step out of range"
+		exit 1
+	fi
+	
+	cur_step_read=$tmp_read_step
 	#return $cur_step_read
 }
 
@@ -107,18 +114,37 @@ back_step()
 }
 
 
+user_set_step()
+{
+	if [ "$2" = "" ]; then
+		echo "The steps ranges from 1 to $LAST_STEP"
+		exit 1
+	fi
+	if [[ "$2" = "" ]] || echo "$2" | grep -q "[[:alpha:]]" ; then
+		echo "Error: not a valid step"
+		exit 1
+	fi
+	
+	if [[ $2 -lt 1 || $2 -gt LAST_STEP ]]; then
+		echo "Error: step out of range"
+		exit 1
+	fi
+	cur_step_read=$2
+	write_in_file
+	cur_step
+}
+
 
 userinput()
 {
 	text_user="$1"
-	echo "$text_user"
 	
 	case "$text_user"  in
 		"next")for_step;;
 		"repeat"|"") cur_step;;
 		"back")back_step;;
 		"reset") cleanup;;
-		"set") echo "$2" > "$ai_step_file";read_in; cur_step ;;
+		"set") user_set_step $*;;
 		*) help;;
 	esac
 		
