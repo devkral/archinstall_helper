@@ -36,7 +36,7 @@ step_1()
 
 ####### steps-end #########
 
-#$1 string to verify, returns 1 if false else 0 and echo sanitized string
+#$1 string to verify, returns 1 if false else 0
 sanitized_input()
 {
 	tmp_verify=$(echo "$1" | grep -o "^-\?[0-9]\+")
