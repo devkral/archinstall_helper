@@ -1,24 +1,23 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
-cur_step_read=-1
+cur_step_read=-1;
 ai_step_file="/tmp/ai-helper-step"
 
 help()
 {
-	print("Welcome to the step for step install guide")
-	print("Usage:")
-	print("  next: continue one step forwards")
-	print("  last: go one step back")
-	print("  repeat: repeat current step")
-	print("  reset: begin from begin")
-	print("  set: go to step")
-	print("  lang <language>: set install guide's language (not implemented yet)")
+	echo "Welcome to the step for step install guide"
+	echo "Usage:"
+	echo "  next: continue one step forwards"
+	echo "  last: go one step back"
+	echo "  repeat: repeat current step"
+	echo "  reset: begin from begin"
+	echo "  set <step>: go to step"
 }
 
 init()
 {
 if [ ! -e "$ai_step_file" ]; then
-  touch "$ai_step_file"
+  echo 0 > "$ai_step_file"
 fi
 
 }
@@ -37,10 +36,11 @@ rm "$ai_step_file" > /dev/null
 
 step_1()
 {
-	print("Step one (or feel comfortable)")
-	print("We begin with some adjustments to the install environment")
-	print()
-	print("To change the keyboard layout use: loadkeys <layoutcode> e.g. loadkeys de")
+	echo "Step one (or feel comfortable)"
+	echo "We begin with some adjustments to the install environment"
+	echo ""
+	echo "To change the keyboard layout, use: loadkeys <layoutcode> e.g. loadkeys de"
+	echo "To change locale, use: export LANG=\"<lang>\""
 	
 }
 
@@ -70,10 +70,10 @@ write_in_file()
 
 cur_step()
 {
-	case($cur_step_read) in
-		1)step_1();
+	case $cur_step_read in
+		1)step_1;;
 		
-		*)
+		*)help;;
 	esac
 	
 	
@@ -84,7 +84,7 @@ for_step()
 {
 	read_in
 	if [ "$(read_step)" = "-1" ]; then
-		print("Error: invalid step.")
+		echo "Error: invalid step."
 		cleanup
 	fi
 	
@@ -97,7 +97,7 @@ back_step()
 {
 	read_in
 	if [ "$(read_step)" = "-1" ]; then
-		print("Error: invalid step.")
+		echo "Error: invalid step."
 		cleanup
 	fi
 	
@@ -110,18 +110,17 @@ back_step()
 
 userinput()
 {
-	case(read) in
+	case read  in
 		"next")for_step;;
-		"repeat") cur_step();;
+		"repeat") cur_step;;
 		"back")back_step;;
 		"reset") cleanup;;
-		"set") echo "$2" > "$ai_step_file"; cur_step() ;;
-		"lang")printf("Not implemented yet");;
+		"set") echo "$2" > "$ai_step_file"; cur_step ;;
 		*) help;;
 	esac
 		
 	
 	
 }
-
+userinput
 
