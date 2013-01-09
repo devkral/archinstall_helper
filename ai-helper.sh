@@ -36,25 +36,39 @@ step_1()
 
 ####### steps-end #########
 
+#$1 string to verify, returns 1 if false else 0 and echo sanitized string
+sanitized_input()
+{
+	tmp_verify=$(echo "$1" | grep -o "^-\?[0-9]\+")
+	
+	if [ "$tmp_verify" = "" ]; then
+		echo "Error: No number could be read from input"
+		cur_step_read=-1
+		return 1
+	fi
+	
+	if [[ $tmp_verify -lt 1 || $tmp_verify -gt $LAST_STEP ]] ; then
+
+		echo "Error: step out of range"
+		cur_step_read=-1
+		return 1
+	fi
+	
+	cur_step_read=$tmp_verify
+	return 0
+	
+}
+
+
 #reads file into internal variable
 read_in()
 {
-	if ! tmp_read_step="$(grep -o "^[0-9]*" "$ai_step_file")"; then
+	sanitized_input "$(cat "$ai_step_file")"
+	if [[ "$cur_step_read" = "-1" ]] ; then
 		echo "Error: Fileinput error"
 		exit 1
 	fi
 	
-	if [ "$tmp_read_step" = "" ]; then
-		echo "Error: No number could be read from file ($ai_step_file)"
-	fi
-	
-	if [[ $tmp_read_step -lt 1 || $tmp_read_step -gt $LAST_STEP ]] ; then
-
-		echo "Error:  read step out of range"
-		exit 1
-	fi
-	
-	cur_step_read=$tmp_read_step
 	#return $cur_step_read
 }
 
@@ -62,29 +76,32 @@ read_in()
 write_in_file()
 {
 	echo "$cur_step_read" > "$ai_step_file"
+	return
 }
 
 cur_step()
 {
+	read_in
 	case $cur_step_read in
 		1)step_1;;
 		
 		*)help;;
 	esac
-	
+	return
 	
 }
 
 
 for_step()
 {
+	read_in
 	if [ "$cur_step_read" = "-1" ]; then
 		echo "Error: invalid step."
 		cleanup
 	fi
 	
 	if [[ $cur_step_read -ge $LAST_STEP ]]; then
-		echo "Error: Already at the End"
+		echo "Error: Already at the end of installation progress"
 		exit 1
 	else
 		((cur_step_read+=1))
@@ -92,11 +109,12 @@ for_step()
 	
 	write_in_file
 	cur_step
+	return
 }
 
 back_step()
 {
-	
+	read_in
 	if [ "$cur_step_read" = "-1" ]; then
 		echo "Error: invalid step."
 		cleanup
@@ -104,13 +122,14 @@ back_step()
 	
 	
 	if [[ $cur_step_read -le 1 ]]; then
-		echo "Error: Already at the begin"
+		echo "Error: Already at the begin of installation progress"
 		exit 1
 	else
 		((cur_step_read-=1))
 	fi
 	write_in_file
 	cur_step
+	return
 }
 
 
@@ -120,18 +139,16 @@ user_set_step()
 		echo "The steps ranges from 1 to $LAST_STEP"
 		exit 1
 	fi
-	if [[ "$2" = "" ]] || echo "$2" | grep -q "[[:alpha:]]" ; then
-		echo "Error: not a valid step"
-		exit 1
-	fi
 	
-	if [[ $2 -lt 1 || $2 -gt LAST_STEP ]]; then
-		echo "Error: step out of range"
+	sanitized_input "$2"
+	if [[ "$cur_step_read" = "-1" ]] ; then
+		echo "Error: step invalid"
 		exit 1
+	else
+		write_in_file
+		cur_step
 	fi
-	cur_step_read=$2
-	write_in_file
-	cur_step
+	return
 }
 
 
@@ -148,16 +165,16 @@ userinput()
 		*) help;;
 	esac
 		
-	
+	return
 	
 }
 
 init()
 {
-if [ ! -e "$ai_step_file" ]; then
+if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]] || [[ "$(cat "$ai_step_file")" = "-1" ]]; then
   echo 1 > "$ai_step_file"
 fi
-read_in
+
 }
 
 
@@ -168,5 +185,6 @@ rm "$ai_step_file" > /dev/null
 }
 
 init
+
 userinput $@
 
