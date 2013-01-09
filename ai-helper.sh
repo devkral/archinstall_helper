@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 cur_step_read=-1;
+LAST_STEP=1
+
 ai_step_file="/tmp/ai-helper-step"
 
 help()
@@ -14,20 +16,7 @@ help()
 	echo "  set <step>: go to step"
 }
 
-init()
-{
-if [ ! -e "$ai_step_file" ]; then
-  echo 0 > "$ai_step_file"
-fi
 
-}
-
-
-cleanup()
-{
-
-rm "$ai_step_file" > /dev/null
-}
 
 ######### steps ###########
 
@@ -82,26 +71,37 @@ cur_step()
 
 for_step()
 {
-	read_in
-	if [ "$(read_step)" = "-1" ]; then
+	if [ "$cur_step_read" = "-1" ]; then
 		echo "Error: invalid step."
 		cleanup
 	fi
 	
-	((cur_step_read+=1))
+	if [[ $cur_step_read -ge $LAST_STEP ]]; then
+		echo "Error: Already at the End"
+		exit 1
+	else
+		((cur_step_read+=1))
+	fi
+	
 	write_in_file
 	cur_step
 }
 
 back_step()
 {
-	read_in
-	if [ "$(read_step)" = "-1" ]; then
+	
+	if [ "$cur_step_read" = "-1" ]; then
 		echo "Error: invalid step."
 		cleanup
 	fi
 	
-	((cur_step_read-=1))
+	
+	if [[ $cur_step_read -le 1 ]]; then
+		echo "Error: Already at the begin"
+		exit 1
+	else
+		((cur_step_read-=1))
+	fi
 	write_in_file
 	cur_step
 }
@@ -110,17 +110,37 @@ back_step()
 
 userinput()
 {
-	case read  in
+	text_user="$1"
+	echo "$text_user"
+	
+	case "$text_user"  in
 		"next")for_step;;
-		"repeat") cur_step;;
+		"repeat"|"") cur_step;;
 		"back")back_step;;
 		"reset") cleanup;;
-		"set") echo "$2" > "$ai_step_file"; cur_step ;;
+		"set") echo "$2" > "$ai_step_file";read_in; cur_step ;;
 		*) help;;
 	esac
 		
 	
 	
 }
-userinput
+
+init()
+{
+if [ ! -e "$ai_step_file" ]; then
+  echo 1 > "$ai_step_file"
+fi
+read_in
+}
+
+
+cleanup()
+{
+
+rm "$ai_step_file" > /dev/null
+}
+
+init
+userinput $@
 
