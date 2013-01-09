@@ -7,7 +7,7 @@ ai_step_file="/tmp/ai-helper-step"
 
 help()
 {
-	echo "Welcome to the step for step install guide"
+	echo "Welcome to the step by step install guide"
 	echo "Usage:"
 	echo "  next: continue one step forwards"
 	echo "  back: go one step back"
