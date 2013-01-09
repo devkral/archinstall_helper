@@ -10,7 +10,7 @@ help()
 	echo "Welcome to the step for step install guide"
 	echo "Usage:"
 	echo "  next: continue one step forwards"
-	echo "  last: go one step back"
+	echo "  back: go one step back"
 	echo "  repeat: repeat current step"
 	echo "  reset: begin from begin"
 	echo "  set <step>: go to step"
