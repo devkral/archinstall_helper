@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+#LICENSE: BSD see LICENSE file
+
+
 cur_step_read=-1;
-LAST_STEP=1
+LAST_STEP=3
 
 ai_step_file="/tmp/ai-helper-step"
 
@@ -33,7 +36,18 @@ step_1()
 	
 }
 
+step_2()
+{
+	echo "Second step (or example)"
+	
+}
 
+
+step_3()
+{
+	echo "Would be nice to fill these steps so beginners have a good guide"
+	
+}
 ####### steps-end #########
 
 #$1 string to verify, returns 1 if false else 0
@@ -84,8 +98,9 @@ cur_step()
 	read_in
 	case $cur_step_read in
 		1)step_1;;
-		
-		*)help;;
+		2)step_2;;
+		3)step_3;;
+		*)echo  "Error: step not implemented";;
 	esac
 	return
 	
