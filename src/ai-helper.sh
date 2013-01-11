@@ -23,10 +23,13 @@ translate_dict=""
 if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]] || [[ "$(cat "$ai_step_file")" = "-1" ]]; then
   echo 1 > "$ai_step_file"
 fi
-if [ -e "$script_dir/po" ]; then
-TEXTDOMAINDIR="$script_dir/po"
 
+#### locale
+if [ -e "$script_dir/po" ]; then
+	TEXTDOMAINDIR="$script_dir/po"
 fi
+
+TEXTDOMAIN=archinstall_helper
 ########################### init-end ###################
 
 
