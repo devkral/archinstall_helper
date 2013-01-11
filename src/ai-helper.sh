@@ -3,10 +3,32 @@
 #LICENSE: BSD see LICENSE file
 
 
+
+
+##################vars
 cur_step_read=-1;
+MAX_LINES=10
+MAX_LONG_LINE=80
+ai_step_file="/tmp/ai-helper-step"
+
+################## init #############
+
 LAST_STEP=3
 
-ai_step_file="/tmp/ai-helper-step"
+script_dir="$(realpath "$(dirname "$0")")"
+translate_dict=""
+
+
+###hacky, cleaner way needed
+if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]] || [[ "$(cat "$ai_step_file")" = "-1" ]]; then
+  echo 1 > "$ai_step_file"
+fi
+if [ -e "$script_dir/po" ]; then
+TEXTDOMAINDIR="$script_dir/po"
+
+fi
+########################### init-end ###################
+
 
 help()
 {
@@ -19,7 +41,22 @@ help()
 	echo "  set <step>: go to step"
 }
 
+############################
+##print text 
+# $1 for text
+print_text()
+{
+	text_o="$1"
+	if [[ "$(echo "$text_o" | wc -l)" -le "$MAX_LINES"  ]] && [[ "$(echo "$text_o" | wc -L)" -le "$MAX_LONG_LINE"  ]];then
+		echo "$1"
+	else
+		echo "$1" | less
+	fi
+	
+}
 
+
+###################
 
 ######### steps ###########
 
@@ -28,11 +65,13 @@ help()
 
 step_1()
 {
-	echo "Step one (or feel comfortable)"
-	echo "We begin with some adjustments to the install environment"
-	echo ""
-	echo "To change the keyboard layout, use: loadkeys <layoutcode> e.g. loadkeys de"
-	echo "To change locale, use: export LANG=\"<lang>\""
+text='Step one (or feel comfortable)
+We begin with some adjustments to the install environment
+
+To change the keyboard layout, use: loadkeys <layoutcode> e.g. loadkeys de
+To change locale, use: export LANG="<lang>"
+'
+print_text "$text"
 	
 }
 
@@ -50,7 +89,23 @@ step_3()
 }
 ####### steps-end #########
 
-#$1 string to verify, returns 1 if false else 0
+#######contains name of step for search
+
+declare -A insteps
+insteps=(
+["prep"]=1
+["lvm"]=2
+
+
+
+
+)
+
+
+
+
+#gruelsome code
+#$1 string to verify, returns 1 if false else 0 but this doesn't work so fall back to  cur_step_read=-1
 sanitized_input()
 {
 	tmp_verify=$(echo "$1" | grep -o "^-\?[0-9]\+")
@@ -184,13 +239,6 @@ userinput()
 	
 }
 
-init()
-{
-if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]] || [[ "$(cat "$ai_step_file")" = "-1" ]]; then
-  echo 1 > "$ai_step_file"
-fi
-
-}
 
 
 cleanup()
@@ -199,7 +247,6 @@ cleanup()
 rm "$ai_step_file" > /dev/null
 }
 
-init
 
 userinput $@
 

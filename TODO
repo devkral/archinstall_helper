@@ -1,8 +1,9 @@
 TODO:
 
 Installscript
-sane folder structure
+sane folder structure (half)
 license
 localization
 contents
 search (e.g. filesystems crypto)
+http://stackoverflow.com/questions/1494178/how-to-define-hash-tables-in-bash
