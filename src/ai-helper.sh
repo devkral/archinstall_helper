@@ -80,14 +80,14 @@ print_text "$text"
 
 step_2()
 {
-	echo "Second step (or example)"
+	print_text "Second step (or example)"
 	
 }
 
 
 step_3()
 {
-	echo "Would be nice to fill these steps so beginners have a good guide"
+	print_text "Would be nice to fill these steps so beginners have a good guide"
 	
 }
 ####### steps-end #########
