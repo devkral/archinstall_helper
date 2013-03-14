@@ -10,13 +10,13 @@ cur_step_read=-1;
 MAX_LINES=10
 MAX_LONG_LINE=80
 ai_step_file="/tmp/ai-helper-step"
+locale_dir="/usr/share/locale/"
 
 ################## init #############
 
-LAST_STEP=3
+LAST_STEP=7
 
 script_dir="$(realpath "$(dirname "$0")")"
-translate_dict=""
 
 
 ###hacky, cleaner way needed
@@ -27,9 +27,15 @@ fi
 #### locale
 if [ -e "$script_dir/po" ]; then
 	TEXTDOMAINDIR="$script_dir/po"
+elif [ "$locale_dir"!="" ];then
+	TEXTDOMAINDIR="$locale_dir"
+else
+	TEXTDOMAINDIR="/usr/share/locale/"
 fi
 
 TEXTDOMAIN=archinstall_helper
+#### locale-end
+
 ########################### init-end ###################
 
 
@@ -51,9 +57,9 @@ print_text()
 {
 	text_o="$1"
 	if [[ "$(echo "$text_o" | wc -l)" -le "$MAX_LINES"  ]] && [[ "$(echo "$text_o" | wc -L)" -le "$MAX_LONG_LINE"  ]];then
-		echo "$1"
-	else
-		echo "$1" | less
+		gettext "$1"
+	else 
+		gettext "$1" | less
 	fi
 	
 }
@@ -65,10 +71,9 @@ print_text()
 
 
 
-
 step_1()
 {
-text='Step one (or feel comfortable)
+text='Step One (or feel comfortable)
 We begin with some adjustments to the install environment
 
 To change the keyboard layout, use: loadkeys <layoutcode> e.g. loadkeys de
@@ -80,27 +85,63 @@ print_text "$text"
 
 step_2()
 {
-	print_text "Second step (or example)"
+	text='Second step:
+'
+	print_text "$text"
 	
 }
 
 
 step_3()
 {
-	print_text "Would be nice to fill these steps so beginners have a good guide"
+	print_text "test"
 	
 }
+
+step_4()
+{
+	print_text "lvm"
+	
+}
+
+step_5()
+{
+	print_text "install"
+	
+}
+
+step_6()
+{
+	print_text "mount"
+	
+}
+
+step_7()
+{
+	print_text "fine-tuning\nWould be nice to fill these steps so beginners have a good guide"
+	
+}
+
+step_8()
+{
+	print_text "Cleanup"
+	
+}
+
 ####### steps-end #########
 
 #######contains name of step for search
 
 declare -A insteps
 insteps=(
-["prep"]=1
-["lvm"]=2
-
-
-
+["prepare"]=1
+["network"]=2
+["crypto"]=3
+["lvm"]=4
+["install"]=5
+["mount"]=6
+["fine-tuning"]=7
+["cleanup"]=8
 
 )
 
@@ -158,6 +199,11 @@ cur_step()
 		1)step_1;;
 		2)step_2;;
 		3)step_3;;
+		4)step_4;;
+		5)step_5;;
+		6)step_6;;
+		7)step_7;;
+		7)step_8;;
 		*)echo  "Error: step not implemented";;
 	esac
 	return
