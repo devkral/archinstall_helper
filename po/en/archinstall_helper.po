@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: archinstall_helper\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: alex <devkral@web.de>\n"
+"Language-Team: alex <devkral@web.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+"Language: en\n"
+
+msgid "adjustenvironment"
+msgstr ""
+"Step One (or feel comfortable): \n"
+"We begin with some adjustments to the install environment.\n"
+"To change the keyboard layout, use: loadkeys <layoutcode>\n"
+"e.g. loadkeys de\n"
+"To change the locale, use:\n"
+"export LANG=\"<lang>\""
+
+msgid "network"
+msgstr ""
+"Now we set up a network connection.if you want to use wifi, enter:\n"
+"wifi-menu\n"
+"this will open a dialog where you can connect to your Access Point"
+
+msgid "partitioning"
+msgstr "the next two steps are optional"
+
+msgid "cryptsetupopt"
+msgstr ""
+
+msgid "lvmopt"
+msgstr ""
+
+msgid "filesystems"
+msgstr ""
+
+msgid "install"
+msgstr ""
+
+msgid "mount"
+msgstr ""
+
+msgid "fine-tuning"
+msgstr "now use"
+
+msgid "cleanup"
+msgstr ""

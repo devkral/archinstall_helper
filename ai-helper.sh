@@ -11,10 +11,9 @@ MAX_LINES=10
 MAX_LONG_LINE=80
 ai_step_file="/tmp/ai-helper-step"
 locale_dir="/usr/share/locale/"
-
 ################## init #############
 
-LAST_STEP=7
+LAST_STEP=10
 
 script_dir="$(realpath "$(dirname "$0")")"
 
@@ -30,6 +29,7 @@ if [ -e "$script_dir/po" ]; then
 elif [ "$locale_dir"!="" ];then
 	TEXTDOMAINDIR="$locale_dir"
 else
+	echo "Fall back to default"
 	TEXTDOMAINDIR="/usr/share/locale/"
 fi
 
@@ -52,14 +52,18 @@ help()
 
 ############################
 ##print text 
-# $1 for text
+# $1 for text, $2 for text which wont be put into gettext
 print_text()
 {
-	text_o="$1"
+	text_o="$(gettext "$1")"
+	if [ "$2" != "" ]; then
+	  text_o="${text_o}\n---\n$2"
+	fi
+	
 	if [[ "$(echo "$text_o" | wc -l)" -le "$MAX_LINES"  ]] && [[ "$(echo "$text_o" | wc -L)" -le "$MAX_LONG_LINE"  ]];then
-		gettext "$1"
+		echo -e "$text_o"
 	else 
-		gettext "$1" | less
+		echo -e "$text_o" | less
 	fi
 	
 }
@@ -67,81 +71,20 @@ print_text()
 
 ###################
 
-######### steps ###########
-
-
-
-step_1()
-{
-text='Step One (or feel comfortable)
-We begin with some adjustments to the install environment
-
-To change the keyboard layout, use: loadkeys <layoutcode> e.g. loadkeys de
-To change locale, use: export LANG="<lang>"
-'
-print_text "$text"
-	
-}
-
-step_2()
-{
-	text='Second step:
-'
-	print_text "$text"
-	
-}
-
-
-step_3()
-{
-	print_text "test"
-	
-}
-
-step_4()
-{
-	print_text "lvm"
-	
-}
-
-step_5()
-{
-	print_text "install"
-	
-}
-
-step_6()
-{
-	print_text "mount"
-	
-}
-
-step_7()
-{
-	print_text "fine-tuning\nWould be nice to fill these steps so beginners have a good guide"
-	
-}
-
-step_8()
-{
-	print_text "Cleanup"
-	
-}
-
-####### steps-end #########
-
 #######contains name of step for search
 
 declare -A insteps
 insteps=(
 ["prepare"]=1
 ["network"]=2
-["crypto"]=3
-["lvm"]=4
-["install"]=5
-["mount"]=6
-["fine-tuning"]=7
-["cleanup"]=8
+["partitioning"]=3
+["crypto"]=4
+["lvm"]=5
+["filesystems"]=6
+["install"]=7
+["mount"]=8
+["fine-tuning"]=9
+["cleanup"]=10
 
 )
 
@@ -196,14 +139,17 @@ cur_step()
 {
 	read_in
 	case $cur_step_read in
-		1)step_1;;
-		2)step_2;;
-		3)step_3;;
-		4)step_4;;
-		5)step_5;;
-		6)step_6;;
-		7)step_7;;
-		7)step_8;;
+		1)print_text "adjustenvironment"
+		help;;
+		2)print_text "network";;
+		3)print_text "partitioning";;
+		4)print_text "cryptsetupopt";;
+		5)print_text "lvmopt";;
+		6)print_text "filesystems";;
+		7)print_text "install";;
+		8)print_text "mount";;
+		9)print_text "fine-tuning";;
+		10)print_text "cleanup";;
 		*)echo  "Error: step not implemented";;
 	esac
 	return
@@ -287,8 +233,6 @@ userinput()
 	return
 	
 }
-
-
 
 cleanup()
 {

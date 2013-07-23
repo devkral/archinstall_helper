@@ -1,0 +1,31 @@
+
+
+msgid "adjustenvironment"
+msgstr ""
+
+msgid "network"
+msgstr ""
+
+msgid "partitioning"
+msgstr ""
+
+msgid "cryptsetupopt"
+msgstr ""
+
+msgid "lvmopt"
+msgstr ""
+
+msgid "filesystems"
+msgstr ""
+
+msgid "install"
+msgstr ""
+
+msgid "mount"
+msgstr ""
+
+msgid "fine-tuning"
+msgstr ""
+
+msgid "cleanup"
+msgstr ""
