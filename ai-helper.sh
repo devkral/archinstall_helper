@@ -10,7 +10,7 @@ cur_step_read=-1;
 MAX_LINES=10
 MAX_LONG_LINE=80
 ai_step_file="/tmp/ai-helper-step"
-locale_dir="/usr/share/locale/"
+locale_dir="123replacemedestdir321/share/locale/"
 ################## init #############
 
 LAST_STEP=10
@@ -24,16 +24,8 @@ if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]] || [[ "$(cat 
 fi
 
 #### locale
-if [ -e "$script_dir/po" ]; then
-	TEXTDOMAINDIR="$script_dir/po"
-elif [ "$locale_dir"!="" ];then
-	TEXTDOMAINDIR="$locale_dir"
-else
-	echo "Fall back to default"
-	TEXTDOMAINDIR="/usr/share/locale/"
-fi
-
-TEXTDOMAIN=archinstall_helper
+export TEXTDOMAINDIR="$locale_dir"
+export TEXTDOMAIN="archinstall_helper"
 #### locale-end
 
 ########################### init-end ###################
@@ -55,7 +47,7 @@ help()
 # $1 for text, $2 for text which wont be put into gettext
 print_text()
 {
-	text_o="$(gettext "$1")"
+	text_o="$1:\n$(gettext -s "$1")"
 	if [ "$2" != "" ]; then
 	  text_o="${text_o}\n---\n$2"
 	fi
@@ -81,10 +73,11 @@ insteps=(
 ["crypto"]=4
 ["lvm"]=5
 ["filesystems"]=6
-["install"]=7
-["mount"]=8
-["fine-tuning"]=9
-["cleanup"]=10
+["mount"]=7
+["install"]=8
+["chroot"]=9
+["fine-tuning"]=10
+["cleanup"]=11
 
 )
 
@@ -146,10 +139,11 @@ cur_step()
 		4)print_text "cryptsetupopt";;
 		5)print_text "lvmopt";;
 		6)print_text "filesystems";;
-		7)print_text "install";;
-		8)print_text "mount";;
-		9)print_text "fine-tuning";;
-		10)print_text "cleanup";;
+		7)print_text "mount";;
+		8)print_text "install";;
+		9)print_text "chroot";;
+		10)print_text "fine-tuning";;
+		11)print_text "cleanup";;
 		*)echo  "Error: step not implemented";;
 	esac
 	return
@@ -215,6 +209,14 @@ user_set_step()
 	fi
 	return
 }
+index()
+{
+	#for ((count=1; count<=LAST_STEP; count++))
+	#do
+		
+	#done
+}
+
 
 
 userinput()
@@ -226,6 +228,7 @@ userinput()
 		"repeat"|"") cur_step;;
 		"back")back_step;;
 		"reset") cleanup;;
+		"index") index;;
 		"set") user_set_step $*;;
 		*) help;;
 	esac

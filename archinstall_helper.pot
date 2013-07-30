@@ -18,10 +18,13 @@ msgstr ""
 msgid "filesystems"
 msgstr ""
 
+msgid "mount"
+msgstr ""
+
 msgid "install"
 msgstr ""
 
-msgid "mount"
+msgid "chroot"
 msgstr ""
 
 msgid "fine-tuning"
