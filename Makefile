@@ -5,9 +5,6 @@ POLANGS=`ls ./po`
 
 all: install
 
-test:
-	$(POLANGS)
-
 install: installlang
 	install -D -m755 ./ai-helper.sh $(DESTDIR)/bin/ai-helper.sh; \
 	sed -i -e "s|123replacemedestdir321|$(DESTDIR)|" $(DESTDIR)/bin/ai-helper.sh
@@ -24,5 +21,5 @@ uninstall: uninstalllang
 
 uninstalllang:
 	for lang in $(POLANGS); \
-	do rm $(DESTDIR)/share/locale/$$lang/LC_MESSAGES/archinstall_helper.mo;
+	do rm $(DESTDIR)/share/locale/$$lang/LC_MESSAGES/archinstall_helper.mo; \
 	done
