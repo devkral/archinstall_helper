@@ -2,9 +2,6 @@ TODO:
 
 -fix print_text printing just the msgid instead of the real message
 -localization of error messages
--search (e.g. filesystems crypto)
--index
--use names instead numbers
 -contents
 http://stackoverflow.com/questions/1494178/how-to-define-hash-tables-in-bash
 
