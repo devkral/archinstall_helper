@@ -9,10 +9,10 @@ msgstr ""
 msgid "partitioning"
 msgstr ""
 
-msgid "cryptsetupopt"
+msgid "crypto"
 msgstr ""
 
-msgid "lvmopt"
+msgid "lvm"
 msgstr ""
 
 msgid "filesystems"

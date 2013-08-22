@@ -5,31 +5,25 @@
 
 
 
-##################vars
+################# vars ##############
 cur_step_read=-1;
 MAX_LINES=10
 MAX_LONG_LINE=80
 ai_step_file="/tmp/ai-helper-step"
-locale_dir="123replacemedestdir321/share/locale/"
+
+#### locale
+export TEXTDOMAINDIR="123replacemedestdir321/share/locale/"
+export TEXTDOMAIN="archinstall_helper"
+#### locale-end
+
 ################## init #############
-
-LAST_STEP=10
-
-script_dir="$(realpath "$(dirname "$0")")"
-
-##
-LANG=en
-
 
 ###create file if it doesn't exist
 if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]]; then
-  echo 1 > "$ai_step_file"
+  echo "0" > "$ai_step_file"
 fi
 
-#### locale
-export TEXTDOMAINDIR="$locale_dir"
-export TEXTDOMAIN="archinstall_helper"
-#### locale-end
+
 
 ########################### init-end ###################
 
@@ -120,7 +114,7 @@ sanitized_input()
 
   if [ "$tmp_verify" = "" ]; then
     tempnew="$(search "$1")"
-    if [ "$tempnew" -gt "0" ]; then
+    if [ "$tempnew" -ge "0" ]; then
       echo "$tempnew"
       return 0
     fi
@@ -143,17 +137,28 @@ sanitized_input()
 read_in()
 {
   cur_step_read="$(sanitized_input "$(cat "$ai_step_file")")"
-  if [[ "$?" != "0" ]] ; then
-    echo "Error: File error" >&2
-    exit 1
+  readstatus="$?"
+  if [[ "$readstatus" = "0" ]] ; then
+	echo "$cur_step_read"
+	return
+  elif [[ "$readstatus" = "0" ]] ; then
+	echo "Error: Stepfile empty. Try to fix this" >&2
+  else
+    echo "Error: File error. Try to fix this" >&2
   fi
-  echo "$cur_step_read"
+  write_in_file "0"
+  exit 1
+  
 }
 
 # writes internal navigation variable into file
 # $1 thing to write
 write_in_file()
 {
+  if [ "$1" = "" ]; then
+    echo "Error: tried to write something empty"
+    exit 1
+  fi
   echo "$1" > "$ai_step_file"
   return
 }
@@ -163,11 +168,12 @@ cur_step()
   #read_in
   case "$(read_in)" in
     0)print_text "adjustenvironment"
+    echo ""
     help;;
     1)print_text "network";;
     2)print_text "partitioning";;
-    3)print_text "cryptsetupopt";;
-    4)print_text "lvmopt";;
+    3)print_text "crypto";;
+    4)print_text "lvm";;
     5)print_text "filesystems";;
     6)print_text "mount";;
     7)print_text "install";;
@@ -188,13 +194,13 @@ for_step()
     cleanup
   fi
 	
-  if [[ $cur_step_read -ge $LAST_STEP ]]; then
-    echo "Error: Already at the end of installation progress" >&2
-    exit 1
+  if [[ $cur_step_read -ge ${#insteps[@]} ]]; then
+    echo "Already at the end of installation progress"
+    exit 0
   else
     ((cur_step_read+=1))
   fi
-  write_in_file
+  write_in_file "$cur_step_read"
   cur_step
   return
 }
@@ -208,11 +214,11 @@ back_step()
   fi
 	
 	
-  if [[ $cur_step_read -le 1 ]]; then
-    echo "Error: Already at the begin of installation progress" >&2
-    exit 1
+  if [[ $cur_step_read -le 0 ]]; then
+    echo "Already at the begin of installation progress"
+    exit 0
   else
-    ((tempa-=1))
+    ((cur_step_read-=1))
   fi
   write_in_file "$cur_step_read"
   cur_step
