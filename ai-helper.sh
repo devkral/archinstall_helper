@@ -27,9 +27,10 @@ fi
 
 ########################### init-end ###################
 
-
-help()
+##now done via gettext
+help_old()
 {
+  
   echo "Welcome to the step by step install guide"
   echo "Usage:"
   echo "  next: continue one step forwards"
@@ -45,7 +46,7 @@ help()
 # $1 for text, $2 for text which wont be put into gettext
 print_text()
 {
-  text_o="$1:\n$(gettext -s "$1")"
+  text_o="$(gettext -s "$1")"
   if [ "$2" != "" ]; then
    text_o="${text_o}\n---\n$2"
   fi
@@ -58,6 +59,17 @@ print_text()
 	
 }
 
+print_info()
+{
+  echo "$(gettext -s "$1")$2" 
+	
+}
+
+print_error()
+{
+  echo "$(gettext -s "$1")" >&2
+	
+}
 
 ###################
 
@@ -118,18 +130,17 @@ sanitized_input()
       echo "$tempnew"
       return 0
     fi
-    echo "Error: No valid step could be read from input" >&2
+    print_error "ErrorStepformat"
     return 2
   fi
 	
   if [[ $tmp_verify -lt 0 || $tmp_verify -gt ${#insteps[@]} ]] ; then
 
-    echo "Error: step out of range" >&2
+    print_error "ErrorRange"
     return 1
   fi
   echo "$tmp_verify"
-  return 0
-	
+  return 0	
 }
 
 
@@ -142,13 +153,12 @@ read_in()
 	echo "$cur_step_read"
 	return
   elif [[ "$readstatus" = "0" ]] ; then
-	echo "Error: Stepfile empty. Try to fix this" >&2
+	print_error "ErrorEmptyStep"
   else
-    echo "Error: File error. Try to fix this" >&2
+    print_error "ErrorFileOther"
   fi
   write_in_file "0"
-  exit 1
-  
+  exit 1  
 }
 
 # writes internal navigation variable into file
@@ -156,11 +166,10 @@ read_in()
 write_in_file()
 {
   if [ "$1" = "" ]; then
-    echo "Error: tried to write something empty"
+    print_error "ErrorEmptyText"
     exit 1
   fi
   echo "$1" > "$ai_step_file"
-  return
 }
 
 cur_step()
@@ -169,7 +178,7 @@ cur_step()
   case "$(read_in)" in
     0)print_text "adjustenvironment"
     echo ""
-    help;;
+    print_text "help";;
     1)print_text "network";;
     2)print_text "partitioning";;
     3)print_text "crypto";;
@@ -181,95 +190,67 @@ cur_step()
     9)print_text "fine-tuning";;
     10)print_text "cleanup";;
   esac
-  return
-	
 }
 
 
 for_step()
 {
-  cur_step_read="$(read_in)"
-  if [ "$cur_step_read" = "-1" ]; then
-    echo "Error: invalid step." >&2
-    cleanup
-  fi
-	
   if [[ $cur_step_read -ge ${#insteps[@]} ]]; then
-    echo "Already at the end of installation progress"
+    print_info "InfoEnd"
     exit 0
   else
     ((cur_step_read+=1))
   fi
   write_in_file "$cur_step_read"
   cur_step
-  return
 }
 
 back_step()
 {
-  cur_step_read="$(read_in)"
-  if [ "$cur_step_read" = "-1" ]; then
-    echo "Error: invalid step." >&2
-    cleanup
-  fi
-	
-	
   if [[ $cur_step_read -le 0 ]]; then
-    echo "Already at the begin of installation progress"
+    print_info "InfoBeginning"
     exit 0
   else
     ((cur_step_read-=1))
   fi
   write_in_file "$cur_step_read"
   cur_step
-  return
 }
 
 
 user_set_step()
 {
   if [ "$2" = "" ]; then
-    echo "The steps ranges from 0 to $(((${#insteps[@]}-1)))" >&2
+    echo "InfoRange" "$(((${#insteps[@]}-1)))"
     exit 1
   fi
 
   cur_step_read="$(sanitized_input "$2")"
-  if [[ "$cur_step_read" = "-1" ]] ; then
-    echo "Error: step invalid" >&2
-    exit 1
-  else
+  if [[ "$?" = "0" ]] ; then
     write_in_file "$cur_step_read"
     cur_step
   fi
-  return
 }
 
 
-
-
+reset()
+{
+  rm "$ai_step_file" > /dev/null
+}
 
 userinput()
 {
-  text_user="$1"
+  option_user="$1"
 	
-  case "$text_user"  in
+  case "$option_user"  in
     "next")for_step;;
     "repeat"|"") cur_step;;
     "back")back_step;;
-    "reset") cleanup;;
+    "reset") reset;;
     "index") index;;
     "set") user_set_step $*;;
-    *) help;;
-  esac
-		
-  return
-	
-}
-
-cleanup()
-{
-
-rm "$ai_step_file" > /dev/null
+    *) print_text "help";;
+  esac	
 }
 
 

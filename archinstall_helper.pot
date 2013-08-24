@@ -32,3 +32,42 @@ msgstr ""
 
 msgid "cleanup"
 msgstr ""
+
+msgid "help"
+msgstr ""
+"Welcome to the step by step install guide\n"
+"Usage:\n"
+"  next: continue one step forwards\n"
+"  back: go one step back\n"
+"  repeat: repeat current step\n"
+"  reset: begin from begin\n"
+"  index: index with topics\n"
+"  set <step>: go to step"
+
+msgid "InfoEnd"
+msgstr ""
+
+msgid "InfoBeginning"
+msgstr ""
+
+msgid "InfoRange"
+msgstr ""
+
+msgid "ErrorRange"
+msgstr ""
+
+msgid "ErrorEmptyFile"
+msgstr ""
+
+msgid "ErrorFileOther"
+msgstr ""
+
+
+msgid "ErrorInvalidStep"
+msgstr ""
+
+msgid "ErrorStepformat"
+msgstr ""
+
+msgid "ErrorEmptyText"
+msgstr ""
