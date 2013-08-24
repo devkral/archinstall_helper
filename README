@@ -1,17 +1,15 @@
 README:
 archinstall_helper:
-this is a step by step install guide for archlinux.
-It should assist especially archlinux beginners which haven't installed
-a linux system on commandline yet.
+This is a step by step install guide for archlinux.
+It should assist people who install archlinux the first time (e.g. used ubuntu before) and
+people installing archlinux not as their daily routine.
 Guide means that the user can open a help
 for every of the installation steps
 and look up what he has to do next.
-
 
 
 Installing:
 via makefile and DESTDIR=/usr or whatever
 
 Using:
-Enter ai-helper and go step by step through
-a installation of archlinux
+Enter ai-helper.sh. The rest should be self-explaining.
