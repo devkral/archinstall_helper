@@ -15,7 +15,7 @@ ai_step_file="$dynamicdir/ai-helper-step"
 
 #### locale
 langfileprefix="lang"
-localfiles="123replacemedestdir321/share/ai_helper/${langfileprefix}"
+localfiles="$PWD/${langfileprefix}"
 syncurl=""
 lang="$(echo "$LANG" | sed -e "s/_.*$//" -e "s/^C$/en/" )"
 #### locale-end
@@ -25,6 +25,7 @@ lang="$(echo "$LANG" | sed -e "s/_.*$//" -e "s/^C$/en/" )"
 
 ### create folder
 mkdir -p "$dynamicdir"
+mkdir -p "$dynamicdir/$langfileprefix"
 
 ###create stepfile if it doesn't exist
 if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]]; then
@@ -183,9 +184,9 @@ write_in_file()
 update_files()
 {
   if [ "$syncurl" != "" ] && ping -q -w 1 "$syncurl" > /dev/null; then
-	  wget -r -P "$dynamicdir/$lang" -l 1 "$syncurl/*"
+	  wget -r -P "$dynamicdir/$langfileprefix" -l 1 "$syncurl/*"
 	else
-		cp -r "$localfiles/*" "$dynamicdir/$lang"
+		cp -r "$localfiles"/* "$dynamicdir/$langfileprefix"
 
 	fi
 
