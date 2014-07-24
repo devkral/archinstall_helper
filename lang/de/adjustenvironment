@@ -1,0 +1,6 @@
+Anpassung der Arbeitsumgebung:
+Zum Wechseln des Tastaturlayouts kann:
+loadkeys <layoutcode>
+benutzt werden.
+Zum Wechseln der Sprache:
+export LANG="<lang>"

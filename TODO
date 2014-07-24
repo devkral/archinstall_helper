@@ -1,6 +1,9 @@
 TODO:
 
 -contents
+-store contents in .txt files
+-retrieve contents optionally by internet
+	=> use git?
 
 ideas:
 -commands for checking that what the user did was correct

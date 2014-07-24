@@ -1,0 +1,4 @@
+Now it's time for fine tuning
+gen-fstab -U /mnt > /mnt/etc/fstab
+hostnamectl
+bootloader grub

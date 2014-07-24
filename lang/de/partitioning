@@ -1,0 +1,10 @@
+Partitionierung
+Das nächste Ding ist
+The next important thing to do, is creating space on your disk for archlinux and create partitions.
+This step will explain here a list for what you need to create space:
+/  (root)(essentiell) das ist die Partition auf die das Basissystem installiert wird, es sollte 20GB oder mehr haben oder wenn keine /home Partition angelegt wird, zusätzlich so groß wie viel Platz wie die Partition für Benutzerdateien
+/home (optional, aber empfohlen): so können private Dateien von der Systempatition getrennt werden. Nützlich bei Neuinstallationen
+swap (optional, aber empfohlen): Hauptsächlich für Hibernation (Ruhezustand). Aber auch als als Ergänzung zum RAM benutzt. Empfohlene Größe: 4/3 vom RAM
+Resizing:
+
+Löschen von Partitionen/Erstellung von Partitionen:

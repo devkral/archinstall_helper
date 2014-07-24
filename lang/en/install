@@ -1,0 +1,4 @@
+pacstrap /mnt
+I would recommend:
+pacstrap /mnt base base-devel arch-install-scripts
+arch-install-scripts: elsewise you will miss some installation tools you used on your fresh installed system

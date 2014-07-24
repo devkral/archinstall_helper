@@ -1,0 +1,6 @@
+Jetzt das Feintuning:
+mit 
+gen-fstab -U /mnt > /mnt/etc/fstab
+kann automatisch eine fstab Datei generiert werden
+hostnamectl
+bootloader grub

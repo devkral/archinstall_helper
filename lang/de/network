@@ -1,0 +1,7 @@
+Internetverbindung:
+
+vorhandene Kabelverbindung:
+kein Schritt mehr nötig. Wer sicher gehen möchte, kann "dhcpcd" eintippen.
+
+Wlan:
+ein gutes mitgeliefertes Tool ist "wifi-menu". Der Dialog sollte selbsterklärend sein.

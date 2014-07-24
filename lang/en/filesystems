@@ -1,0 +1,15 @@
+in UN*X is everything a file. So are partitions or abstractions of it (e.g. lvm and cryptsetup)
+These abstractions are found in /dev
+so have a look into /dev (e.g. via "ls /dev/sd*" or for lvm/cryptsetup "ls /dev/mapper")
+These new created partitions are blank (or contain garbage, which wasn't deleted) and must be formatted before you can use them\n
+=> filesystem
+    (WARNING: formating a partition destroys the former content)
+filesystem can be created via the command:
+mkfs.<filesystem format> <path to partition>
+for an overview over installed filesystem formats (you can use) enter:
+ls /usr/bin/mkfs.*
+
+There is also a special filesystem named swapfs:
+this filesystem is created via "mkswap <partition>"
+it is used if the RAM is full and for hibernation support
+for hibernation support it should be at least as big as your RAM, better: 3/2 of your RAM

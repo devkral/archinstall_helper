@@ -1,0 +1,6 @@
+Jetzt muss das Dateisystem gemounted werden
+Um das zu tun kann
+mount /dev/<yourdevice><partitionnumber> /mnt
+verwendet werden
+Wenn eine seperate boot Partition verwendet wird, muss außerdem boot gemounted werden:
+mount /dev/<yourdevice><partitionnumber> /mnt/boot

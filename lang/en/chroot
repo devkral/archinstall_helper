@@ -1,0 +1,21 @@
+now we need to prepare for fine-tuning. This means
+creating an environment we can switch in
+if you haven't mounted /mnt/boot yet (means: mount the partition designated for being the boot partition at this folder (see "mount")
+do this now.
+Before you enter via arch-chroot some infos:
+
+- use "exit" to return from chroot
+- chroot  (especially arch-chroot) will switch you in your new system. This means /mnt/xy is now /xy. Also your shell changes
+- if you don't want your shell changing, install via pacstrap: zsh and grml-zsh-config, command: "pactstrap /mnt zsh grml-zsh-config"
+    and you have also to use "zsh" as your favourite shell
+- maybe this step-by-step guide isn't available, so prepare for switching back
+
+
+
+Now it is the time to switch in your new system
+Easy way:
+enter "arch-chroot /mnt" or if you have a favourite shell "arch-chroot /mnt <favourite shell>"
+hard way:
+make important system directories in your fresh installed system available via:
+mount -o bind /sys /mnt/sys
+analog for sys, proc, tmp, run, dev

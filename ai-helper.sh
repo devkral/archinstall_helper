@@ -9,20 +9,27 @@
 cur_step_read=-1;
 MAX_LINES=10
 MAX_LONG_LINE=80
-ai_step_file="/tmp/ai-helper-step"
+
+dynamicdir="/tmp/ai-helper"
+ai_step_file="$dynamicdir/ai-helper-step"
 
 #### locale
-export TEXTDOMAINDIR="123replacemedestdir321/share/locale/"
-export TEXTDOMAIN="archinstall_helper"
+langfileprefix="lang"
+localfiles="123replacemedestdir321/share/ai_helper/${langfileprefix}"
+syncurl=""
+lang="$(echo "$LANG" | sed -e "s/_.*$//" -e "s/^C$/en/" )"
 #### locale-end
 
 ################## init #############
 
-###create file if it doesn't exist
+
+### create folder
+mkdir -p "$dynamicdir"
+
+###create stepfile if it doesn't exist
 if [ ! -f "$ai_step_file" ] || [[ "$(cat "$ai_step_file")" = "" ]]; then
   echo "0" > "$ai_step_file"
 fi
-
 
 
 ########################### init-end ###################
@@ -46,7 +53,8 @@ help_old()
 # $1 for text, $2 for text which wont be put into gettext
 print_text()
 {
-  text_o="$(gettext -s "$1")"
+  #text_o="$(gettext -s "$1")"
+	text_o="$(cat "$dynamicdir/$langfileprefix/$lang/$1")"
   if [ "$2" != "" ]; then
    text_o="${text_o}\n---\n$2"
   fi
@@ -61,13 +69,13 @@ print_text()
 
 print_info()
 {
-  echo "$(gettext -s "$1")$2" 
+  echo "$(cat "$dynamicdir/$langfileprefix/$lang/$1")"
 	
 }
 
 print_error()
 {
-  echo "$(gettext -s "$1")" >&2
+  echo "$(cat "$dynamicdir/$langfileprefix/$lang/$1")" >&2
 	
 }
 
@@ -172,15 +180,28 @@ write_in_file()
   echo "$1" > "$ai_step_file"
 }
 
+update_files()
+{
+  if [ "$syncurl" != "" ] && ping -q -w 1 "$syncurl" > /dev/null; then
+	  wget -r -P "$dynamicdir/$lang" -l 1 "$syncurl/*"
+	else
+		cp -r "$localfiles/*" "$dynamicdir/$lang"
+
+	fi
+
+}
+
 cur_step()
 {
   #read_in
   case "$(read_in)" in
-    0)print_text "adjustenvironment"
+    0) update_files
+		print_text "adjustenvironment"
     echo ""
     print_text "help";;
     1)print_text "network";;
-    2)print_text "partitioning";;
+    2)update_files #update after network is set up
+					print_text "partitioning";;
     3)print_text "crypto";;
     4)print_text "lvm";;
     5)print_text "filesystems";;

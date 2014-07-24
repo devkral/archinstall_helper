@@ -1,0 +1,12 @@
+Willkommen zur Archlinux Schritt-für-Schritt-Anleitung
+Diese Anleitung soll alle nötigen Informationen und Tricks für eine funktionierende Archlinux-Installation vermitteln
+Benutzung:
+ai-helper.sh <Kommando>
+
+Kommandos:
+  next: gehe zum nächsten Schritt
+  back: gehe einen Schritt zurück
+  repeat: Wiederhole den Schritt
+  reset: beginne vom Anfang
+  index: gib den Index aus
+  set <Schritt>: gehe zu Schritt

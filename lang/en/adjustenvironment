@@ -1,0 +1,6 @@
+Environment Adjustments:
+We begin with some adjustments to the install environment.
+To change the keyboard layout, use: loadkeys <layoutcode>
+e.g. loadkeys de
+To change the locale, use:
+export LANG="<lang>"

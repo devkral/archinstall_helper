@@ -1,0 +1,12 @@
+Welcome to the archlinux step by step install guide
+This guide aims to give all necessary informations and hints for installing a working archlinux
+Usage:
+ai-helper.sh <command>
+
+commands:
+  next: continue one step forwards
+  back: go one step back
+  repeat: repeat current step
+  reset: begin from begin
+  index: index with topics
+  set <step>: go to step

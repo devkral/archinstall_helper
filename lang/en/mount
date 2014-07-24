@@ -1,0 +1,5 @@
+Now we have to mount the filesystems.
+you can do this by
+mount /dev/<yourdevice><partitionnumber> /mnt
+if you have a seperate boot partition you also have to mount /boot:
+mount /dev/<yourdevice><partitionnumber> /mnt/boot

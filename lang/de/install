@@ -1,0 +1,5 @@
+pacstrap /mnt
+Ich empfehle:
+pacstrap /mnt base base-devel arch-install-scripts
+arch-install-scripts: Installskripts, die bei der Installation verwendet
+wurden. Empfehlenswert, weil beim neuen System so die Installationstools zur Reperatur zur Verfügung stehen.

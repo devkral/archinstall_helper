@@ -1,0 +1,7 @@
+Network connection:
+Before we install archlinux, we have to establish an internet connection.
+If you use a network cable, everything should be perfectly fine.
+To test you can use "dhcpcd".
+
+For wifi it's trickier.
+You have to enter "wifi-menu" and select the right Access Point.
