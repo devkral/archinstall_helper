@@ -159,10 +159,10 @@ read_in()
   cur_step_read="$(sanitized_input "$(cat "$ai_step_file")")"
   readstatus="$?"
   if [[ "$readstatus" = "0" ]] ; then
-	echo "$cur_step_read"
-	return
+    #echo "$cur_step_read"
+    return
   elif [[ "$readstatus" = "0" ]] ; then
-	print_error "ErrorEmptyStep"
+    print_error "ErrorEmptyStep"
   else
     print_error "ErrorFileOther"
   fi
@@ -194,8 +194,7 @@ update_files()
 
 cur_step()
 {
-  #read_in
-  case "$(read_in)" in
+  case "$cur_step_read" in
     0) update_files
 		print_text "adjustenvironment"
     echo ""
@@ -260,6 +259,8 @@ reset()
   rm "$ai_step_file" > /dev/null
 }
 
+#read the current step
+read_in
 userinput()
 {
   option_user="$1"
